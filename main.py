@@ -1,5 +1,4 @@
 # Install required libraries
-!pip install gradio tensorflow numpy opencv-python requests matplotlib
 
 import gradio as gr
 import numpy as np
