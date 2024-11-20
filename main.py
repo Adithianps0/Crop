@@ -1,5 +1,3 @@
-# Install required libraries
-
 import gradio as gr
 import numpy as np
 import requests
@@ -102,23 +100,23 @@ def analyze_crop(image, latitude, longitude):
 
     return report, suggestion, weather_info, "crop_report.png"
 
-# Gradio interface
-interface = gr.Interface(
-    fn=analyze_crop,
-    inputs=[
-        gr.inputs.Image(type="pil", label="Upload Crop Image"),
-        gr.inputs.Number(default=8.5241, label="Enter Latitude (e.g., 8.5241 for Tvm)"),
-        gr.inputs.Number(default=76.9366, label="Enter Longitude (e.g., 76.9366 for Tvm)"),
-    ],
-    outputs=[
-        gr.outputs.Textbox(label="Irrigation Report"),
-        gr.outputs.Textbox(label="Suggested Irrigation Time"),
-        gr.outputs.Textbox(label="Weather Information"),
-        gr.outputs.Image(type="file", label="Health Distribution"),
-    ],
-    title="Advanced Crop Irrigation Assistant for Thiruvananthapuram",
-    description="Upload a crop image and use Thiruvananthapuram's default latitude and longitude for a weather-adjusted irrigation report.",
-)
+# Gradio interface (updated for Gradio v3.x)
+def gradio_interface():
+    with gr.Blocks() as demo:
+        with gr.Row():
+            image_input = gr.Image(type="pil", label="Upload Crop Image")
+            latitude_input = gr.Number(default=8.5241, label="Enter Latitude (e.g., 8.5241 for Tvm)")
+            longitude_input = gr.Number(default=76.9366, label="Enter Longitude (e.g., 76.9366 for Tvm)")
+        
+        with gr.Row():
+            output_report = gr.Textbox(label="Irrigation Report")
+            output_suggestion = gr.Textbox(label="Suggested Irrigation Time")
+            output_weather_info = gr.Textbox(label="Weather Information")
+            output_health_chart = gr.Image(label="Health Distribution", type="file")
+        
+        image_input.change(analyze_crop, [image_input, latitude_input, longitude_input], [output_report, output_suggestion, output_weather_info, output_health_chart])
 
-# Launch the interface
-interface.launch()
+    return demo
+
+# Launch the Gradio interface
+gradio_interface().launch()
